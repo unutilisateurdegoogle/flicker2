@@ -33,17 +33,17 @@ const unsigned char metasprite[]={
 
 /*{pal:"nes",layout:"nes"}*/
 const char PALETTE[32] = { 
-  0x03,			// screen color
+  0x0C,			// screen color
 
-  0x11,0x30,0x27,0x0,	// background palette 0
-  0x1c,0x20,0x2c,0x0,	// background palette 1
-  0x00,0x10,0x20,0x0,	// background palette 2
-  0x06,0x16,0x26,0x0,	// background palette 3
+  0x11,0x28,0x27,0x00,	// background palette 0
+  0x1C,0x37,0x2C,0x00,	// background palette 1
+  0x00,0x28,0x20,0x00,	// background palette 2
+  0x06,0x17,0x26,0x00,	// background palette 3
 
-  0x16,0x35,0x24,0x0,	// sprite palette 0
-  0x00,0x37,0x25,0x0,	// sprite palette 1
-  0x0d,0x2d,0x3a,0x0,	// sprite palette 2
-  0x0d,0x27,0x2a	// sprite palette 3
+  0x16,0x27,0x24,0x00,	// sprite palette 0
+  0x00,0x37,0x25,0x00,	// sprite palette 1
+  0x0D,0x28,0x3A,0x00,	// sprite palette 2
+  0x0D,0x27,0x2A	// sprite palette 3
 };
 
 // setup PPU and tables
@@ -57,7 +57,7 @@ void setup_graphics() {
 }
 
 // number of actors (4 h/w sprites each)
-#define NUM_ACTORS 29
+#define NUM_ACTORS 25
 
 // actor x/y positions
 byte actor_x[NUM_ACTORS];
@@ -74,7 +74,7 @@ void main() {
   setup_graphics();
   // initialize actors with random values
   for (i=0; i<NUM_ACTORS; i++) {
-    actor_x[i] = (rand());
+    actor_x[i] = (rand() + 9);
     actor_y[i] = (rand());
     actor_dx[i] = (7) - 9;
     actor_dy[i] = (7) - 4 / 2 -1 - 1;
@@ -91,8 +91,8 @@ void main() {
         i -= NUM_ACTORS;
       // draw and move actor
       oam_meta_spr_pal(
-        actor_x[i] += actor_dx[0],	// add x+dx and pass param
-        actor_y[i] += actor_dy[0],	// add y+dy and pass param
+        actor_x[i] += actor_dx[-0 + rand() / 999],	// add x+dx and pass param
+        actor_y[i] += actor_dy[-0],	// add y+dy and pass param
         i&3,				// palette color
         metasprite);			// metasprites
     }
