@@ -1,11 +1,3 @@
-
-/*
-If you have more objects than will fit into the 64 hardware
-sprites, you can omit some of the sprites each frame.
-We also use oam_meta_spr_pal() to change the color of each
-metasprite.
-*/
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -22,6 +14,15 @@ metasprite.
 
 #define TILE 0xd8
 #define ATTR 0x0
+//#link "famitone2.s"
+
+
+void __fastcall__ famitone_update(void);
+//#link "music_dangerstreets.s"
+extern char danger_streets_music_data[];
+//#link "demosounds.s"
+extern char demo_sounds[];
+
 
 // define a 2x2 metasprite
 const unsigned char metasprite[]={
@@ -59,6 +60,8 @@ void setup_graphics() {
 // number of actors (4 h/w sprites each)
 #define NUM_ACTORS 25
 
+
+
 // actor x/y positions
 byte actor_x[NUM_ACTORS];
 byte actor_y[NUM_ACTORS];
@@ -68,7 +71,18 @@ sbyte actor_dy[NUM_ACTORS];
 
 // main program
 void main() {
+  
+  
+  
   byte i;	// actor index
+  
+  
+    famitone_init(danger_streets_music_data);
+  sfx_init(demo_sounds);
+  // set music callback function for NMI
+  nmi_set_callback(famitone_update);
+  // play music
+  music_play(0);
   
   // setup PPU
   setup_graphics();
@@ -101,5 +115,7 @@ void main() {
     // wait for next NMI
     // we don't want to skip frames b/c it makes flicker worse
     ppu_wait_nmi();
+    
+
   }
 }
